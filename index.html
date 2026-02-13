@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timesheet Tracker Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --surface-raised: #f7f9fc;
+      --surface-hover: #edf1f7;
+      --border: #dfe4ed;
+      --border-light: #c9d1de;
+      --text-primary: #1a2b4a;
+      --text-secondary: #506380;
+      --text-muted: #8896ab;
+      --accent: #2563eb;
+      --accent-light: #3b82f6;
+      --accent-glow: rgba(37, 99, 235, 0.1);
+      --green: #059669;
+      --green-dim: rgba(5, 150, 105, 0.08);
+      --orange: #d97706;
+      --orange-dim: rgba(217, 119, 6, 0.08);
+      --red: #dc2626;
+      --red-dim: rgba(220, 38, 38, 0.08);
+      --blue: #2563eb;
+      --blue-dim: rgba(37, 99, 235, 0.08);
+      --radius: 10px;
+      --radius-lg: 16px;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Login ────────────────────────────────── */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-screen::before {
+      content: '';
+      position: absolute;
+      top: -40%; left: -20%;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .login-screen::after {
+      content: '';
+      position: absolute;
+      bottom: -30%; right: -10%;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      border-radius: var(--radius-lg);
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s ease-out;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .login-brand .icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+    }
+
+    .login-box h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+    }
+
+    .login-box .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font);
+      background: var(--surface-raised);
+      color: var(--text-primary);
+      transition: border 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-login:active { transform: translateY(0); }
+
+    .status-msg { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 13px; text-align: center; }
+    .status-msg.error { background: var(--red-dim); color: var(--red); border: 1px solid rgba(220,38,38,0.12); }
+    .status-msg.success { background: var(--green-dim); color: var(--green); border: 1px solid rgba(5,150,105,0.12); }
+
+    /* ── Dashboard Layout ────────────────────── */
+    .dashboard { display: none; }
+    .dashboard.active { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 10;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 8px;
+      margin-bottom: 32px;
+    }
+
+    .sidebar-brand .icon {
+      width: 32px; height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25);
+    }
+
+    .sidebar-brand span {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-section {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0 8px;
+      margin-bottom: 12px;
+      margin-top: 8px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+      text-decoration: none;
+    }
+
+    .nav-link:hover { background: var(--surface-hover); color: var(--text-primary); }
+    .nav-link.active { background: var(--accent-glow); color: var(--accent-light); }
+    .nav-link .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 8px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .user-pill:hover { background: var(--surface-hover); }
+
+    .user-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #0ea5e9);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600; color: white;
+    }
+
+    .user-info { overflow: hidden; }
+    .user-info .name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-info .role { font-size: 11px; color: var(--text-muted); }
+
+    /* Main Area */
+    .main-area {
+      margin-left: 240px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    .topbar h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+    .main-content { padding: 28px 32px; max-width: 1100px; }
+
+    /* ── Buttons ──────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font);
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-accent { background: var(--accent); color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+    .btn-accent:hover { box-shadow: 0 4px 16px rgba(37,99,235,0.3); transform: translateY(-1px); }
+
+    .btn-green { background: var(--green-dim); color: var(--green); border-color: rgba(0,196,140,0.15); }
+    .btn-green:hover { background: rgba(0,196,140,0.18); }
+
+    .btn-orange { background: var(--orange-dim); color: var(--orange); border-color: rgba(245,166,35,0.15); }
+    .btn-orange:hover { background: rgba(245,166,35,0.18); }
+
+    .btn-ghost { background: var(--surface-raised); color: var(--text-secondary); border-color: var(--border); }
+    .btn-ghost:hover { background: var(--surface-hover); color: var(--text-primary); }
+
+    /* ── Stat Cards ───────────────────────────── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .stat-card:hover { border-color: var(--border-light); }
+
+    .stat-card .stat-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card .stat-icon.hours { background: var(--blue-dim); }
+    .stat-card .stat-icon.earnings { background: var(--green-dim); }
+    .stat-card .stat-icon.clients { background: var(--accent-glow); }
+
+    .stat-card .stat-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+
+    .stat-card .stat-value {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-card .stat-value.hours-val { color: var(--blue); }
+    .stat-card .stat-value.earnings-val { color: var(--green); }
+    .stat-card .stat-value.clients-val { color: var(--accent-light); }
+
+    .stat-card .stat-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── Controls Bar ─────────────────────────── */
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .date-range {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: var(--surface);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .date-range label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .date-range input[type="date"] {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      padding: 6px 10px;
+      font-size: 13px;
+      font-family: var(--font);
+      outline: none;
+
+    }
+
+    .date-range input[type="date"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .action-buttons { display: flex; gap: 8px; }
+
+    /* ── Entries Table ─────────────────────────── */
+    .entries-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .entries-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .entries-header h2 { font-size: 16px; font-weight: 600; }
+
+    .entries-count {
+      font-size: 12px;
+      background: var(--surface-hover);
+      padding: 3px 10px;
+      border-radius: 20px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 10px;
+    }
+
+    .grid-head {
+      display: grid;
+      grid-template-columns: 40px 170px 170px 1fr 80px;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 24px;
+      background: var(--surface-raised);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+    }
+
+    .grid-head input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+
+    .entry-row {
+      display: grid;
+      grid-template-columns: 40px 170px 170px 1fr 80px;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 24px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    .entry-row:last-child { border-bottom: none; }
+    .entry-row:hover { background: var(--surface-hover); }
+
+    .entry-row.dirty {
+      background: rgba(245, 166, 35, 0.05);
+      border-left: 3px solid var(--orange);
+      padding-left: 21px;
+    }
+
+    .entry-row input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+
+    .entry-row input,
+    .entry-row select {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--font);
+      background: transparent;
+      color: var(--text-primary);
+      transition: all 0.15s;
+      outline: none;
+    }
+
+    .entry-row input:hover,
+    .entry-row select:hover {
+      background: var(--surface-raised);
+      border-color: var(--border);
+    }
+
+    .entry-row input:focus,
+    .entry-row select:focus {
+      background: var(--surface-raised);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-glow);
+    }
+
+    .entry-row select { cursor: pointer; }
+    .entry-row select option { background: var(--surface); color: var(--text-primary); padding: 8px; }
+
+    .entry-row input[type="number"] {
+      font-family: var(--mono);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .entry-row input[type="datetime-local"] {
+      font-family: var(--mono);
+      font-size: 12px;
+
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+    .empty-state p { font-size: 14px; }
+
+    /* Day group headers */
+    .day-header {
+      padding: 10px 24px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .day-header .day-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ── Toast ────────────────────────────────── */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: toastIn 0.35s ease-out;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .toast.success { background: #059669; color: white; }
+    .toast.error { background: #dc2626; color: white; }
+    .toast.info { background: #2563eb; color: white; }
+
+    .toast.exiting { animation: toastOut 0.3s ease-in forwards; }
+
+    @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(40px); } }
+
+    /* ── Modal ────────────────────────────────── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 32px;
+      border-radius: var(--radius-lg);
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: fadeUp 0.3s ease-out;
+    }
+
+    .modal-content h2 { font-size: 18px; margin-bottom: 24px; }
+
+    .modal-content .form-group input,
+    .modal-content .form-group select {
+      background: var(--surface-raised);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+    }
+
+    .modal-content .form-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .modal-buttons { display: flex; gap: 10px; margin-top: 28px; }
+
+    /* Invoice table in modal */
+    .invoice-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .invoice-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--surface-raised);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .invoice-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .invoice-table td.mono { font-family: var(--mono); text-align: right; }
+    .invoice-table .total-row td { font-weight: 700; border-top: 2px solid var(--border-light); }
+
+    /* ── Scrollbar ─────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #c9d1de; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+
+    /* ── Responsive ────────────────────────────── */
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main-area { margin-left: 0; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .grid-head, .entry-row { grid-template-columns: 36px 140px 1fr 70px; }
+      .grid-head > :nth-child(4), .entry-row > :nth-child(4) { display: none; }
+      .main-content { padding: 20px 16px; }
+      .topbar { padding: 14px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <div class="login-brand">
+        <div class="icon">⏱</div>
+        <h1>Timesheet</h1>
+      </div>
+      <p class="subtitle">Track your billable hours automatically</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="you@company.com">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn-login" onclick="handleLogin()">Sign In</button>
+      <div id="loginStatus" class="status-msg" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="icon">⏱</div>
+        <span>Timesheet</span>
+      </div>
+
+      <div class="nav-section">Overview</div>
+      <a class="nav-link active"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-link"><span class="nav-icon">🕐</span> Time Entries</a>
+
+      <div class="nav-section" style="margin-top: 24px;">Manage</div>
+      <a class="nav-link"><span class="nav-icon">👥</span> Clients</a>
+      <a class="nav-link"><span class="nav-icon">💰</span> Invoices</a>
+
+      <div class="sidebar-footer">
+        <div class="user-pill" onclick="handleLogout()" title="Click to logout">
+          <div class="user-avatar" id="userAvatar">?</div>
+          <div class="user-info">
+            <div class="name" id="userName">User</div>
+            <div class="role">Sign out →</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-area">
+      <div class="topbar">
+        <h1>Dashboard</h1>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="showAddClientModal()">+ Client</button>
+        </div>
+      </div>
+
+      <div class="main-content">
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon hours">🕐</div>
+            <div class="stat-label">Total Hours</div>
+            <div class="stat-value hours-val" id="totalHours">0.0</div>
+            <div class="stat-sub">for selected range</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon earnings">💰</div>
+            <div class="stat-label">Earnings</div>
+            <div class="stat-value earnings-val" id="totalEarnings">$0.00</div>
+            <div class="stat-sub">based on client rates</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon clients">👥</div>
+            <div class="stat-label">Active Clients</div>
+            <div class="stat-value clients-val" id="clientCount">0</div>
+            <div class="stat-sub">with time entries</div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-bar">
+          <div class="date-range">
+            <label>From</label>
+            <input type="date" id="startDate">
+            <label>To</label>
+            <input type="date" id="endDate">
+            <button class="btn btn-accent" onclick="loadData()" style="padding: 6px 14px;">Apply</button>
+          </div>
+          <div class="action-buttons">
+            <button id="saveBtn" class="btn btn-orange" onclick="saveAllChanges()" style="display: none;">💾 Save Changes</button>
+            <button class="btn btn-green" onclick="generateInvoice()">Invoice</button>
+            <button class="btn btn-ghost" onclick="exportToExcel()">📊 Export</button>
+          </div>
+        </div>
+
+        <!-- Entries -->
+        <div class="entries-card">
+          <div class="entries-header">
+            <div style="display: flex; align-items: center;">
+              <h2>Time Entries</h2>
+              <span class="entries-count" id="entriesCount">0</span>
+            </div>
+          </div>
+
+          <div class="grid-head">
+            <input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" aria-label="Select all entries">
+            <div>Timestamp</div>
+            <div>Client</div>
+            <div>Activity / URL</div>
+            <div style="text-align: right;">Min</div>
+          </div>
+
+          <div id="entriesList">
+            <div class="empty-state">
+              <div class="empty-icon">⏱</div>
+              <p>Loading entries...</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Client Modal -->
+  <div id="addClientModal" class="modal">
+    <div class="modal-content">
+      <h2>Add New Client</h2>
+      <div class="form-group">
+        <label>Client Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Acme Corp">
+      </div>
+      <div class="form-group">
+        <label>Hourly Rate ($)</label>
+        <input type="number" id="clientRate" placeholder="150">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-accent" onclick="handleAddClient()">Create Client</button>
+        <button class="btn btn-ghost" onclick="hideAddClientModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    let authToken = localStorage.getItem('token');
+    let allClients = [];
+    let allEntries = [];
+    let selectedEntries = new Set();
+    let dirtyEntries = {};
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('startDate').value = today;
+    document.getElementById('endDate').value = today;
+
+    if (authToken) { showDashboard(); loadData(); }
+
+    // ── Toast Notifications ──────────────────────
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      const icons = { success: '✓', error: '✕', info: 'ℹ' };
+      toast.innerHTML = `<span>${icons[type] || ''}</span> ${message}`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.add('exiting');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ── Auth ─────────────────────────────────────
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const statusEl = document.getElementById('loginStatus');
+      try {
+        const res = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.token) {
+          authToken = data.token;
+          localStorage.setItem('token', authToken);
+          setUser(data.user);
+          showDashboard();
+          loadData();
+        } else {
+          statusEl.textContent = 'Login failed: ' + (data.error || 'invalid credentials');
+          statusEl.className = 'status-msg error';
+          statusEl.style.display = 'block';
+        }
+      } catch (err) {
+        statusEl.textContent = 'Could not reach server';
+        statusEl.className = 'status-msg error';
+        statusEl.style.display = 'block';
+      }
+    }
+
+    function setUser(user) {
+      if (!user) return;
+      document.getElementById('userName').textContent = user.name || user.email || 'User';
+      const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+      document.getElementById('userAvatar').textContent = initials;
+    }
+
+    function showDashboard() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('token');
+      location.reload();
+    }
+
+    // ── Data Loading ─────────────────────────────
+    async function loadData() {
+      try {
+        await loadClients();
+        await loadTimeEntries();
+        renderEntries();
+        updateStats();
+      } catch (err) {
+        console.error('Data loading error:', err);
+        showToast('Failed to load data', 'error');
+      }
+    }
+
+    async function loadClients() {
+      const res = await fetch(`${API_URL}/clients`, { headers: { 'Authorization': `Bearer ${authToken}` } });
+      if (res.status === 401) return handleLogout();
+      allClients = await res.json();
+      document.getElementById('clientCount').textContent = allClients.length;
+    }
+
+    async function loadTimeEntries() {
+      const start = document.getElementById('startDate').value;
+      const end = document.getElementById('endDate').value;
+      const res = await fetch(`${API_URL}/time-entries?startDate=${start}T00:00:00&endDate=${end}T23:59:59`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
+      if (res.status === 401) return handleLogout();
+      allEntries = await res.json();
+    }
+
+    // ── Render ───────────────────────────────────
+    function renderEntries() {
+      const list = document.getElementById('entriesList');
+      document.getElementById('entriesCount').textContent = allEntries.length;
+
+      if (allEntries.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>No entries found for this range.</p></div>`;
+        return;
+      }
+
+      // Group by day
+      const grouped = {};
+      allEntries.forEach(entry => {
+        const day = new Date(entry.timestamp).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+        if (!grouped[day]) grouped[day] = [];
+        grouped[day].push(entry);
+      });
+
+      let html = '';
+      for (const [day, entries] of Object.entries(grouped)) {
+        html += `<div class="day-header"><span class="day-dot"></span>${day}</div>`;
+        entries.forEach(entry => {
+          const isDirty = dirtyEntries[entry.id] ? 'dirty' : '';
+          const dateObj = new Date(entry.timestamp);
+          const formattedDate = new Date(dateObj.getTime() - dateObj.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+          const durationMin = Math.floor((entry.duration || 0) / 60);
+          html += `
+            <div class="entry-row ${isDirty}" data-id="${entry.id}">
+              <input type="checkbox" onchange="toggleEntry('${entry.id}', this.checked)" ${selectedEntries.has(entry.id) ? 'checked' : ''} aria-label="Select entry">
+              <input type="datetime-local" value="${formattedDate}" onchange="markDirty('${entry.id}', 'timestamp', this.value)" aria-label="Timestamp">
+              <select onchange="markDirty('${entry.id}', 'clientId', this.value)" aria-label="Client">
+                <option value="">No Client</option>
+                ${allClients.map(c => `<option value="${c.id}" ${c.id === entry.clientId ? 'selected' : ''}>${c.name}</option>`).join('')}
+              </select>
+              <input type="text" value="${entry.title || entry.url || ''}" onchange="markDirty('${entry.id}', 'title', this.value)" aria-label="Activity" placeholder="Activity description...">
+              <input type="number" value="${durationMin}" onchange="markDirty('${entry.id}', 'duration', this.value * 60)" aria-label="Duration in minutes">
+            </div>`;
+        });
+      }
+
+      list.innerHTML = html;
+    }
+
+    // ── Dirty Tracking ───────────────────────────
+    function markDirty(id, field, value) {
+      if (!dirtyEntries[id]) {
+        const original = allEntries.find(e => e.id == id);
+        if (original) dirtyEntries[id] = { ...original };
+      }
+      if (dirtyEntries[id]) dirtyEntries[id][field] = value;
+      document.getElementById('saveBtn').style.display = 'inline-flex';
+      const el = document.querySelector(`.entry-row[data-id="${id}"]`);
+      if (el) el.classList.add('dirty');
+    }
+
+    async function saveAllChanges() {
+      const updates = Object.values(dirtyEntries);
+      try {
+        const res = await fetch(`${API_URL}/time-entries/bulk`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ entries: updates })
+        });
+        if (res.ok) {
+          dirtyEntries = {};
+          document.getElementById('saveBtn').style.display = 'none';
+          await loadData();
+          showToast('Changes saved successfully', 'success');
+        } else {
+          showToast('Failed to save changes', 'error');
+        }
+      } catch {
+        showToast('Network error while saving', 'error');
+      }
+    }
+
+    function toggleEntry(id, checked) {
+      if (checked) selectedEntries.add(id); else selectedEntries.delete(id);
+    }
+
+    function toggleSelectAll(cb) {
+      if (cb.checked) allEntries.forEach(e => selectedEntries.add(e.id)); else selectedEntries.clear();
+      renderEntries();
+    }
+
+    // ── Stats ────────────────────────────────────
+    function updateStats() {
+      const totalSec = allEntries.reduce((s, e) => s + (e.duration || 0), 0);
+      document.getElementById('totalHours').textContent = (totalSec / 3600).toFixed(1);
+      let earn = 0;
+      allEntries.forEach(e => {
+        const c = allClients.find(cl => cl.id == e.clientId);
+        if (c) earn += (e.duration / 3600) * c.hourlyRate;
+      });
+      document.getElementById('totalEarnings').textContent = '$' + earn.toFixed(2);
+    }
+
+    // ── Invoice ──────────────────────────────────
+    window.generateInvoice = function() {
+      const items = selectedEntries.size > 0 ? allEntries.filter(e => selectedEntries.has(e.id)) : allEntries;
+      if (items.length === 0) return showToast('No entries to invoice', 'error');
+
+      const summary = {};
+      items.forEach(e => {
+        const client = allClients.find(c => c.id == e.clientId);
+        const cid = e.clientId || 'unknown';
+        if (!summary[cid]) summary[cid] = { name: client?.name || 'Unknown', rate: client?.hourlyRate || 0, sec: 0 };
+        summary[cid].sec += e.duration || 0;
+      });
+
+      let grandTotal = 0;
+      const rows = Object.values(summary).map(s => {
+        const total = (s.sec / 3600) * s.rate;
+        grandTotal += total;
+        return `<tr>
+          <td>${s.name}</td>
+          <td class="mono">${(s.sec / 3600).toFixed(2)}</td>
+          <td class="mono">$${s.rate.toFixed(0)}/hr</td>
+          <td class="mono">$${total.toFixed(2)}</td>
+        </tr>`;
+      }).join('');
+
+      const modalHTML = `
+        <div id="invoiceModal" class="modal active">
+          <div class="modal-content" style="max-width: 560px;">
+            <h2>Invoice Preview</h2>
+            <table class="invoice-table">
+              <thead><tr><th>Client</th><th style="text-align:right;">Hours</th><th style="text-align:right;">Rate</th><th style="text-align:right;">Total</th></tr></thead>
+              <tbody>
+                ${rows}
+                <tr class="total-row">
+                  <td colspan="3">Total</td>
+                  <td class="mono" style="color: var(--green);">$${grandTotal.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="modal-buttons">
+              <button class="btn btn-green" onclick="downloadInvoice()">Download .xlsx</button>
+              <button class="btn btn-ghost" onclick="document.getElementById('invoiceModal').remove()">Close</button>
+            </div>
+          </div>
+        </div>`;
+      document.body.insertAdjacentHTML('beforeend', modalHTML);
+      window.currentInvoice = { summary, items };
+    };
+
+    window.downloadInvoice = function() {
+      const wb = XLSX.utils.book_new();
+      const data = Object.values(window.currentInvoice.summary).map(s => ({
+        Client: s.name, Hours: (s.sec / 3600).toFixed(2), Rate: s.rate, Total: ((s.sec / 3600) * s.rate).toFixed(2)
+      }));
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Invoice');
+      XLSX.writeFile(wb, `Invoice_${Date.now()}.xlsx`);
+      document.getElementById('invoiceModal').remove();
+      showToast('Invoice downloaded', 'success');
+    };
+
+    // ── Export ────────────────────────────────────
+    window.exportToExcel = function() {
+      if (allEntries.length === 0) return showToast('No entries to export', 'error');
+      const wb = XLSX.utils.book_new();
+      const data = allEntries.map(e => {
+        const c = allClients.find(cl => cl.id == e.clientId);
+        return {
+          Timestamp: new Date(e.timestamp).toLocaleString(),
+          Client: c?.name || '',
+          Activity: e.title || e.url || '',
+          Minutes: Math.floor((e.duration || 0) / 60),
+          Hours: ((e.duration || 0) / 3600).toFixed(2)
+        };
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Time Entries');
+      XLSX.writeFile(wb, `Timesheet_${Date.now()}.xlsx`);
+      showToast('Exported to Excel', 'success');
+    };
+
+    // ── Client Modal ─────────────────────────────
+    function showAddClientModal() { document.getElementById('addClientModal').classList.add('active'); }
+    function hideAddClientModal() { document.getElementById('addClientModal').classList.remove('active'); }
+
+    async function handleAddClient() {
+      const name = document.getElementById('clientName').value;
+      const rate = document.getElementById('clientRate').value;
+      if (!name) return showToast('Client name is required', 'error');
+      try {
+        await fetch(`${API_URL}/clients`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+          body: JSON.stringify({ name, hourlyRate: parseFloat(rate) || 0 })
+        });
+        hideAddClientModal();
+        await loadData();
+        showToast(`${name} added`, 'success');
+      } catch {
+        showToast('Failed to add client', 'error');
+      }
+    }
+
+    // Close modals on backdrop click
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) modal.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>
