@@ -8,12 +8,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname)); 
 
 app.post('/submit-audit', (req, res) => {
-    const { name, email, company, pain_point } = req.body;
-    const data = `${new Date().toISOString()} | ${name} | ${email} | ${company} | ${pain_point}\n`;
+    // These names now match the "name" attributes in your index.html
+    const { name, email, company, bottleneck } = req.body;
     
-    // Appends to a flat file in the root
-    fs.appendFileSync('leads.txt', data);
-    res.send('Audit request received. We will contact you shortly.');
+    const data = `${new Date().toISOString()} | ${name} | ${email} | ${company} | ${bottleneck}\n`;
+    
+    try {
+        // Appends to leads.txt in the root
+        fs.appendFileSync('leads.txt', data);
+        res.send('Audit request received. We will contact you shortly.');
+    } catch (err) {
+        console.error('Error writing to file', err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
