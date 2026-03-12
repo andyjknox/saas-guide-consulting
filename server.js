@@ -1,59 +1,42 @@
 const express = require('express');
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const path = require('path');
-const app = express();
 
-// Use 8080 as discussed since your Railway URL preferred it
+const app = express();
+const resend = new Resend(process.env.RESEND_API_KEY);
 const PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// Alternative SMTP for Workspace if 'service: gmail' fails
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true, 
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
+app.post('/submit-audit', async (req, res) => {
+    const { name, email, company, bottleneck } = req.body;
+
+    try {
+        const data = await resend.emails.send({
+            from: 'onboarding@resend.dev', // We can update this to your domain later
+            to: 'andyknox@saasguidesolutions.com',
+            subject: `New GTM Audit Request: ${company}`,
+            html: `
+                <h2>New Lead Received</h2>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Company:</strong> ${company}</p>
+                <p><strong>Bottleneck:</strong> ${bottleneck}</p>
+            `
+        });
+
+        res.send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Submission Received!</h1>
+                <p>Thanks ${name}, I'll be in touch shortly.</p>
+                <a href="/">Back to Home</a>
+            </div>
+        `);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error sending email. Please contact Andy directly.");
     }
 });
 
-// Email Configuration pulling from Railway Variables
-//const transporter = nodemailer.createTransport({
- //   service: 'gmail',
-  //  auth: {
-  //      user: process.env.EMAIL_USER,
-  //      pass: process.env.EMAIL_PASSWORD
- //   }
-//});
-
-app.post('/submit-audit', (req, res) => {
-    const { name, email, company, bottleneck } = req.body;
-
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: 'andyknox@saasguidesolutions.com',
-        subject: `New GTM Audit Request: ${company}`,
-        text: `Name: ${name}\nEmail: ${email}\nCompany: ${company}\nBottleneck: ${bottleneck}`
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Email Error:', error);
-            res.status(500).send('Something went wrong. Please email Andy directly at andyknox@saasguidesolutions.com');
-        } else {
-            // High-value redirect to your bio page/success message
-            res.send(`
-                <div style="font-family: sans-serif; text-align: center; padding: 50px;">
-                    <h1>Audit Request Received!</h1>
-                    <p>Thanks, ${name}. I'll review ${company}'s bottleneck and get back to you.</p>
-                    <a href="/" style="color: blue;">Return to Home</a>
-                </div>
-            `);
-        }
-    });
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server active on port ${PORT}`));
