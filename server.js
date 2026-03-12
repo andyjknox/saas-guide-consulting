@@ -9,14 +9,25 @@ const PORT = process.env.PORT || 8080;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
-// Email Configuration pulling from Railway Variables
+// Alternative SMTP for Workspace if 'service: gmail' fails
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, 
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
     }
 });
+
+// Email Configuration pulling from Railway Variables
+//const transporter = nodemailer.createTransport({
+ //   service: 'gmail',
+  //  auth: {
+  //      user: process.env.EMAIL_USER,
+  //      pass: process.env.EMAIL_PASSWORD
+ //   }
+//});
 
 app.post('/submit-audit', (req, res) => {
     const { name, email, company, bottleneck } = req.body;
