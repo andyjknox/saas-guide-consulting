@@ -12,9 +12,10 @@ app.use(express.static(__dirname));
 app.post('/submit-audit', async (req, res) => {
     const { name, email, company, bottleneck } = req.body;
 
-const data = await resend.emails.send({
-            // CHANGE THIS: Use your actual verified domain email
-            from: 'GTM Audit <andy@saasguidesolutions.com>', 
+    try {
+        // This is where the 'try' was missing
+        const data = await resend.emails.send({
+            from: 'GTM Audit <andyknox@saasguidesolutions.com>', 
             to: 'andyknox@saasguidesolutions.com',
             subject: `New GTM Audit Request: ${company}`,
             html: `
@@ -32,12 +33,12 @@ const data = await resend.emails.send({
             <div style="font-family: sans-serif; text-align: center; padding: 50px;">
                 <h1>Submission Received!</h1>
                 <p>Thanks ${name}, I'll be in touch shortly.</p>
-                <a href="/">Back to Home</a>
+                <a href="/" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Home</a>
             </div>
         `);
     } catch (error) {
-        console.error(error);
-        res.status(500).send("Error sending email. Please contact Andy directly.");
+        console.error("Resend Error Details:", error);
+        res.status(500).send("Error sending email. Please contact Andy directly at andyknox@saasguidesolutions.com");
     }
 });
 
