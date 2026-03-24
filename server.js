@@ -153,13 +153,223 @@ app.post('/submit-audit', async (req, res) => {
         res.send(`
             <div style="font-family: sans-serif; text-align: center; padding: 50px;">
                 <h1>Submission Received!</h1>
-                <p>Thanks ${safeName}, I'll be in touch shortly.</p>
+                <p>Thanks ${safeName}, someone from our team will be in touch shortly.</p>
                 <a href="/" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Home</a>
             </div>
         `);
     } catch (error) {
         console.error("Resend Error Details:", error);
         res.status(500).send("Error sending email. Please contact Andy directly at andyknox@saasguidesolutions.com");
+    }
+});
+
+// SpeedySheets Free Trial Form
+app.post('/submit-speedysheets', async (req, res) => {
+    const { name, email, is_contractor, industry, hates_timesheets, website_url, _formRenderedAt } = req.body;
+
+    // Honeypot check
+    if (website_url) {
+        return res.send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Request Received!</h1>
+                <p>Thanks, someone from our team will be in touch shortly.</p>
+                <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+            </div>
+        `);
+    }
+
+    // Timestamp check
+    if (_formRenderedAt) {
+        const elapsed = Date.now() - parseInt(_formRenderedAt, 10);
+        if (elapsed < 3000) {
+            return res.send(`
+                <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                    <h1>Request Received!</h1>
+                    <p>Thanks, someone from our team will be in touch shortly.</p>
+                    <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+                </div>
+            `);
+        }
+    }
+
+    // Rate limiting
+    const clientIp = req.ip || req.connection.remoteAddress;
+    if (isRateLimited(clientIp)) {
+        return res.status(429).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Too Many Requests</h1>
+                <p>Please wait a few minutes before submitting again.</p>
+                <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+            </div>
+        `);
+    }
+
+    // Validate required fields
+    if (!name || !email || !is_contractor || !industry) {
+        return res.status(400).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Missing Required Fields</h1>
+                <p>Please fill in all required fields.</p>
+                <a href="/solutions.html#speedysheets-trial" style="color: #2563eb; text-decoration: none; font-weight: bold;">Go Back</a>
+            </div>
+        `);
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Invalid Email</h1>
+                <p>Please provide a valid email address.</p>
+                <a href="/solutions.html#speedysheets-trial" style="color: #2563eb; text-decoration: none; font-weight: bold;">Go Back</a>
+            </div>
+        `);
+    }
+
+    // Block personal email domains
+    const emailDomain = email.trim().toLowerCase().split('@')[1];
+    if (blockedDomains.includes(emailDomain)) {
+        return res.status(400).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Work Email Required</h1>
+                <p>Please use your company email address. Personal email addresses (Gmail, Hotmail, etc.) are not accepted.</p>
+                <a href="/solutions.html#speedysheets-trial" style="color: #2563eb; text-decoration: none; font-weight: bold;">Go Back</a>
+            </div>
+        `);
+    }
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeContractor = escapeHtml(is_contractor);
+    const safeIndustry = escapeHtml(industry);
+    const safeHate = escapeHtml(hates_timesheets);
+
+    try {
+        await resend.emails.send({
+            from: 'SpeedySheets <andyknox@saasguidesolutions.com>',
+            to: 'andyknox@saasguidesolutions.com',
+            subject: `SpeedySheets Free Trial Request: ${safeName}`,
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #16a34a;">SpeedySheets Trial Request</h2>
+                    <p><strong>Name:</strong> ${safeName}</p>
+                    <p><strong>Email:</strong> ${safeEmail}</p>
+                    <p><strong>Contractor:</strong> ${safeContractor}</p>
+                    <p><strong>Industry:</strong> ${safeIndustry}</p>
+                    <p><strong>Hates Timesheets:</strong> ${safeHate}/10</p>
+                </div>
+            `
+        });
+
+        res.send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1 style="color: #16a34a;">You're In!</h1>
+                <p>Thanks ${safeName}, someone from our team will get you set up with your free SpeedySheets licence shortly.</p>
+                <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+            </div>
+        `);
+    } catch (error) {
+        console.error("Resend Error (SpeedySheets):", error);
+        res.status(500).send("Error sending request. Please contact andyknox@saasguidesolutions.com directly.");
+    }
+});
+
+// Whistler Intel Interest Form
+app.post('/submit-whistler', async (req, res) => {
+    const { name, email, interest_type, message, website_url, _formRenderedAt } = req.body;
+
+    // Honeypot check
+    if (website_url) {
+        return res.send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Thanks for Your Interest!</h1>
+                <p>We'll be in touch.</p>
+                <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+            </div>
+        `);
+    }
+
+    // Timestamp check
+    if (_formRenderedAt) {
+        const elapsed = Date.now() - parseInt(_formRenderedAt, 10);
+        if (elapsed < 3000) {
+            return res.send(`
+                <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                    <h1>Thanks for Your Interest!</h1>
+                    <p>We'll be in touch.</p>
+                    <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+                </div>
+            `);
+        }
+    }
+
+    // Rate limiting
+    const clientIp = req.ip || req.connection.remoteAddress;
+    if (isRateLimited(clientIp)) {
+        return res.status(429).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Too Many Requests</h1>
+                <p>Please wait a few minutes before submitting again.</p>
+                <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+            </div>
+        `);
+    }
+
+    // Validate required fields
+    if (!name || !email || !interest_type) {
+        return res.status(400).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Missing Required Fields</h1>
+                <p>Please fill in your name, email, and interest type.</p>
+                <a href="/solutions.html#whistler-intel" style="color: #2563eb; text-decoration: none; font-weight: bold;">Go Back</a>
+            </div>
+        `);
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Invalid Email</h1>
+                <p>Please provide a valid email address.</p>
+                <a href="/solutions.html#whistler-intel" style="color: #2563eb; text-decoration: none; font-weight: bold;">Go Back</a>
+            </div>
+        `);
+    }
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeInterest = escapeHtml(interest_type);
+    const safeMessage = escapeHtml(message);
+
+    try {
+        await resend.emails.send({
+            from: 'Whistler Intel <andyknox@saasguidesolutions.com>',
+            to: 'andyknox@saasguidesolutions.com',
+            subject: `Whistler Intel Interest: ${safeInterest} - ${safeName}`,
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #0f172a;">Whistler Intel Interest</h2>
+                    <p><strong>Name:</strong> ${safeName}</p>
+                    <p><strong>Email:</strong> ${safeEmail}</p>
+                    <p><strong>Interest:</strong> ${safeInterest}</p>
+                    <p><strong>Message:</strong> ${safeMessage || '<em>None provided</em>'}</p>
+                </div>
+            `
+        });
+
+        res.send(`
+            <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+                <h1>Thanks for Your Interest!</h1>
+                <p>${safeName}, someone from our team will reach out to discuss Whistler Intel with you.</p>
+                <a href="/solutions.html" style="color: #2563eb; text-decoration: none; font-weight: bold;">Back to Solutions</a>
+            </div>
+        `);
+    } catch (error) {
+        console.error("Resend Error (Whistler Intel):", error);
+        res.status(500).send("Error sending request. Please contact andyknox@saasguidesolutions.com directly.");
     }
 });
 
