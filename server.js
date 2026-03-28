@@ -69,8 +69,9 @@ app.get('/auth/google', (req, res) => {
 
 // OAuth: Step 2 - Handle callback
 app.get('/auth/google/callback', async (req, res) => {
-    const { code } = req.query;
-    if (!code) return res.status(400).send('Missing authorization code');
+    const { code, error } = req.query;
+    if (error) return res.status(400).send(`Google OAuth error: ${error}`);
+    if (!code) return res.status(400).send('Missing authorization code. Please start the flow at <a href="/auth/google">/auth/google</a>');
 
     try {
         const { tokens } = await oauth2Client.getToken(code);
