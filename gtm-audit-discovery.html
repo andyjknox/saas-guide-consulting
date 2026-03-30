@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTM Audit Discovery | SaaS Guide Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            body { font-size: 11px; }
+            .no-print { display: none !important; }
+            .page-break { page-break-before: always; }
+            section { page-break-inside: avoid; }
+            .check-item { page-break-inside: avoid; }
+        }
+        .check-item input[type="checkbox"]:checked + label { text-decoration: line-through; color: #94a3b8; }
+    </style>
+</head>
+<body class="bg-white text-slate-900 font-sans leading-relaxed">
+
+    <!-- Header -->
+    <div class="max-w-4xl mx-auto px-6 py-8">
+        <div class="flex items-center justify-between border-b-2 border-slate-900 pb-6 mb-2">
+            <div>
+                <h1 class="text-3xl font-extrabold tracking-tight">GTM Audit Discovery</h1>
+                <p class="text-slate-500 mt-1">30-Minute Qualifying Call Checklist</p>
+            </div>
+            <div class="text-right no-print">
+                <button onclick="window.print()" class="bg-slate-900 text-white px-5 py-2 rounded-md font-medium hover:bg-slate-800 transition text-sm">Print / Save PDF</button>
+            </div>
+        </div>
+
+        <!-- Call Info -->
+        <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 mb-8 no-print">
+            <div class="grid grid-cols-3 gap-4 text-sm">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Company</label>
+                    <input type="text" class="w-full p-1.5 border border-slate-300 rounded text-sm" placeholder="Company name">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Contact</label>
+                    <input type="text" class="w-full p-1.5 border border-slate-300 rounded text-sm" placeholder="Name / Title">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Date</label>
+                    <input type="date" class="w-full p-1.5 border border-slate-300 rounded text-sm">
+                </div>
+            </div>
+        </div>
+
+        <p class="text-sm text-slate-500 italic mb-8">Focus: Identifying where AI, automation, and the right software stack can accelerate growth and eliminate bottlenecks.</p>
+
+        <!-- ===== SECTION 1: COMPANY PROFILE ===== -->
+        <section class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                <h2 class="text-xl font-bold">Company Profile & Stage</h2>
+                <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">5 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-blue-600" id="c1">
+                    <label for="c1" class="text-sm"><strong>What stage are you at?</strong> (Pre-revenue / Early revenue <$1M ARR / Growth $1-10M / Scale $10M+)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-blue-600" id="c2">
+                    <label for="c2" class="text-sm"><strong>What's your current ARR/MRR?</strong> Where do you want to be in 12 months?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-blue-600" id="c3">
+                    <label for="c3" class="text-sm"><strong>What's the team size?</strong> (Total / Sales / Marketing / CS / Ops)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-blue-600" id="c4">
+                    <label for="c4" class="text-sm"><strong>What's your ICP?</strong> (Industry, company size, buyer persona, deal size)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-blue-600" id="c5">
+                    <label for="c5" class="text-sm"><strong>Primary GTM motion?</strong> (PLG / Sales-led / Channel / Hybrid)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-blue-600" id="c6">
+                    <label for="c6" class="text-sm"><strong>What triggered this call?</strong> What's the #1 pain point right now?</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 2: SALES ===== -->
+        <section class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                <h2 class="text-xl font-bold">Sales Process & Pipeline</h2>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">5 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s1">
+                    <label for="s1" class="text-sm"><strong>Walk me through your sales process.</strong> (Lead &rarr; Demo &rarr; Proposal &rarr; Close) How many stages?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s2">
+                    <label for="s2" class="text-sm"><strong>Average deal cycle length?</strong> (Days from first touch to closed-won)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s3">
+                    <label for="s3" class="text-sm"><strong>Win rate?</strong> Do you know where deals stall or die?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s4">
+                    <label for="s4" class="text-sm"><strong>Average deal size (ACV)?</strong> Trending up or down?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s5">
+                    <label for="s5" class="text-sm"><strong>Pipeline coverage ratio?</strong> (3x target? 5x? Do you measure it?)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s6">
+                    <label for="s6" class="text-sm"><strong>How are leads routed and scored?</strong> Manual or automated? Rules-based or gut feel?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-green-600" id="s7">
+                    <label for="s7" class="text-sm"><strong>Do reps have playbooks / sequences?</strong> Or is outreach ad-hoc?</label>
+                </div>
+                <p class="text-xs text-red-600 font-semibold mt-2 bg-red-50 px-3 py-1.5 rounded">AI Opportunity: Automated lead scoring, AI-generated sequences, pipeline forecasting, deal coaching</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 3: MARKETING & LEAD GEN ===== -->
+        <section class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                <h2 class="text-xl font-bold">Marketing & Lead Generation</h2>
+                <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-semibold">5 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m1">
+                    <label for="m1" class="text-sm"><strong>Where do your leads come from?</strong> (Inbound / Outbound / Referral / PPC / Content / Events) What %?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m2">
+                    <label for="m2" class="text-sm"><strong>Monthly lead volume?</strong> (MQLs / SQLs) What's your MQL-to-SQL conversion rate?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m3">
+                    <label for="m3" class="text-sm"><strong>Cost per lead (CPL)?</strong> Customer acquisition cost (CAC)? Do you track by channel?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m4">
+                    <label for="m4" class="text-sm"><strong>What PPC / paid channels are you running?</strong> (Google Ads, Capterra, G2, LinkedIn Ads, Meta)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m5">
+                    <label for="m5" class="text-sm"><strong>Content marketing?</strong> (Blog, SEO, webinars, case studies) What's driving organic traffic?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m6">
+                    <label for="m6" class="text-sm"><strong>Do you have marketing automation?</strong> (Drip campaigns, nurture sequences, retargeting)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-purple-600" id="m7">
+                    <label for="m7" class="text-sm"><strong>Website analytics setup?</strong> (GA4, heatmaps, visitor identification like Snitcher/Clearbit)</label>
+                </div>
+                <p class="text-xs text-red-600 font-semibold mt-2 bg-red-50 px-3 py-1.5 rounded">AI Opportunity: AI content generation, intent-based targeting, automated nurture, predictive lead scoring, visitor deanonymization</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 4: OPERATIONS & REVOPS ===== -->
+        <section class="mb-10 page-break">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-orange-600 text-white rounded-full flex items-center justify-center font-bold text-sm">4</div>
+                <h2 class="text-xl font-bold">Operations & RevOps</h2>
+                <span class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-semibold">5 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-orange-600" id="o1">
+                    <label for="o1" class="text-sm"><strong>Do you have a dedicated RevOps / Ops person?</strong> Or is it split across roles?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-orange-600" id="o2">
+                    <label for="o2" class="text-sm"><strong>How clean is your data?</strong> Duplicates? Incomplete records? When was the last data audit?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-orange-600" id="o3">
+                    <label for="o3" class="text-sm"><strong>Do Sales, Marketing, and CS share the same source of truth?</strong> Or are there data silos?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-orange-600" id="o4">
+                    <label for="o4" class="text-sm"><strong>What manual processes eat the most time?</strong> (Data entry, reporting, handoffs, approvals)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-orange-600" id="o5">
+                    <label for="o5" class="text-sm"><strong>Do you have real-time dashboards?</strong> Or are reports manually built? (Weekly Excel exports?)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-orange-600" id="o6">
+                    <label for="o6" class="text-sm"><strong>How is the sales-to-CS handoff?</strong> Is context lost? Does CS get full deal history?</label>
+                </div>
+                <p class="text-xs text-red-600 font-semibold mt-2 bg-red-50 px-3 py-1.5 rounded">AI Opportunity: Automated data enrichment, AI-powered reporting, workflow automation, intelligent handoff triggers</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 5: IMPLEMENTATION & ONBOARDING ===== -->
+        <section class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-cyan-600 text-white rounded-full flex items-center justify-center font-bold text-sm">5</div>
+                <h2 class="text-xl font-bold">Implementation & Onboarding</h2>
+                <span class="text-xs bg-cyan-100 text-cyan-700 px-2 py-0.5 rounded-full font-semibold">3 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-cyan-600" id="i1">
+                    <label for="i1" class="text-sm"><strong>What's your onboarding process?</strong> (Self-serve / guided / white-glove) Time to value?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-cyan-600" id="i2">
+                    <label for="i2" class="text-sm"><strong>How long from signed contract to live customer?</strong> Is implementation a bottleneck?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-cyan-600" id="i3">
+                    <label for="i3" class="text-sm"><strong>Do you track activation metrics?</strong> (First value moment, feature adoption, setup completion %)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-cyan-600" id="i4">
+                    <label for="i4" class="text-sm"><strong>Are customers dropping off during onboarding?</strong> Where and why?</label>
+                </div>
+                <p class="text-xs text-red-600 font-semibold mt-2 bg-red-50 px-3 py-1.5 rounded">AI Opportunity: Automated onboarding sequences, in-app guided tours, AI chatbot support, health score tracking</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 6: CUSTOMER SUCCESS & RETENTION ===== -->
+        <section class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center font-bold text-sm">6</div>
+                <h2 class="text-xl font-bold">Customer Success & Retention KPIs</h2>
+                <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-semibold">3 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r1">
+                    <label for="r1" class="text-sm"><strong>Monthly / Annual churn rate?</strong> (Logo churn AND revenue churn) Do you know why customers leave?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r2">
+                    <label for="r2" class="text-sm"><strong>Net Revenue Retention (NRR)?</strong> Are you expanding within existing accounts?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r3">
+                    <label for="r3" class="text-sm"><strong>LTV:CAC ratio?</strong> (Target: 3:1+) Do you calculate this?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r4">
+                    <label for="r4" class="text-sm"><strong>NPS or CSAT scores?</strong> How do you collect customer feedback?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r5">
+                    <label for="r5" class="text-sm"><strong>Do you have customer health scores?</strong> Can you predict churn before it happens?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r6">
+                    <label for="r6" class="text-sm"><strong>QBR / check-in cadence?</strong> Proactive or reactive customer management?</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-red-600" id="r7">
+                    <label for="r7" class="text-sm"><strong>Upsell / cross-sell process?</strong> Who owns expansion revenue? Is it systematic?</label>
+                </div>
+                <p class="text-xs text-red-600 font-semibold mt-2 bg-red-50 px-3 py-1.5 rounded">AI Opportunity: Predictive churn models, automated health scoring, AI-triggered renewal workflows, sentiment analysis</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 7: TECH STACK ===== -->
+        <section class="mb-10 page-break">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-slate-700 text-white rounded-full flex items-center justify-center font-bold text-sm">7</div>
+                <h2 class="text-xl font-bold">Current Tech Stack Audit</h2>
+                <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-semibold">3 min</span>
+            </div>
+            <p class="text-sm text-slate-500 ml-11 mb-4">Check what they're using. Gaps = opportunities.</p>
+
+            <div class="ml-11 grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+                <div class="font-bold text-xs uppercase tracking-wide text-slate-400 col-span-2 mt-2 mb-1 border-b border-slate-200 pb-1">CRM & Sales</div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t1"><label for="t1">CRM: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t2"><label for="t2">Sales engagement: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t3"><label for="t3">Prospecting / Data: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t4"><label for="t4">Call recording / coaching: _______________</label>
+                </div>
+
+                <div class="font-bold text-xs uppercase tracking-wide text-slate-400 col-span-2 mt-3 mb-1 border-b border-slate-200 pb-1">Marketing</div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t5"><label for="t5">Marketing automation: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t6"><label for="t6">Email platform: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t7"><label for="t7">Analytics / Tracking: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t8"><label for="t8">SEO / Content tools: _______________</label>
+                </div>
+
+                <div class="font-bold text-xs uppercase tracking-wide text-slate-400 col-span-2 mt-3 mb-1 border-b border-slate-200 pb-1">CS & Support</div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t9"><label for="t9">CS platform: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t10"><label for="t10">Help desk / Ticketing: _______________</label>
+                </div>
+
+                <div class="font-bold text-xs uppercase tracking-wide text-slate-400 col-span-2 mt-3 mb-1 border-b border-slate-200 pb-1">Operations & Data</div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t11"><label for="t11">BI / Reporting: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t12"><label for="t12">Integration / iPaaS: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t13"><label for="t13">AI tools in use: _______________</label>
+                </div>
+                <div class="check-item flex items-center gap-2">
+                    <input type="checkbox" class="accent-slate-600" id="t14"><label for="t14">Billing / Revenue: _______________</label>
+                </div>
+            </div>
+
+            <div class="ml-11 mt-4 space-y-2">
+                <p class="text-xs text-red-600 font-semibold bg-red-50 px-3 py-1.5 rounded">Key Questions: How well are tools integrated? What's shelfware? What's held together by spreadsheets?</p>
+            </div>
+        </section>
+
+        <!-- ===== SECTION 8: AI READINESS ===== -->
+        <section class="mb-10">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">8</div>
+                <h2 class="text-xl font-bold">AI & Automation Readiness</h2>
+                <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-full font-semibold">2 min</span>
+            </div>
+            <div class="space-y-3 ml-11">
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-indigo-600" id="a1">
+                    <label for="a1" class="text-sm"><strong>Are you using any AI today?</strong> (ChatGPT, Copilot, AI SDRs, AI writing, etc.)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-indigo-600" id="a2">
+                    <label for="a2" class="text-sm"><strong>What processes would you automate if you could?</strong> (Top 3 time sinks)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-indigo-600" id="a3">
+                    <label for="a3" class="text-sm"><strong>Data maturity:</strong> Is your data clean enough to power AI? (AI is only as good as the data)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-indigo-600" id="a4">
+                    <label for="a4" class="text-sm"><strong>Team appetite for AI?</strong> (Excited / Skeptical / Overwhelmed / Don't know where to start)</label>
+                </div>
+                <div class="check-item flex items-start gap-2">
+                    <input type="checkbox" class="mt-1.5 accent-indigo-600" id="a5">
+                    <label for="a5" class="text-sm"><strong>Budget for tools / consulting?</strong> (Ballpark or range is fine)</label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SCORING SUMMARY ===== -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold mb-4 border-b-2 border-slate-900 pb-2">Quick-Score Summary</h2>
+            <p class="text-sm text-slate-500 mb-4">Rate each area 1-5 based on the call. 1 = major gap, 5 = solid.</p>
+            <table class="w-full text-sm border-collapse">
+                <thead>
+                    <tr class="bg-slate-100">
+                        <th class="text-left p-2 font-semibold">Area</th>
+                        <th class="p-2 w-12 text-center font-semibold">1</th>
+                        <th class="p-2 w-12 text-center font-semibold">2</th>
+                        <th class="p-2 w-12 text-center font-semibold">3</th>
+                        <th class="p-2 w-12 text-center font-semibold">4</th>
+                        <th class="p-2 w-12 text-center font-semibold">5</th>
+                        <th class="p-2 text-left font-semibold">Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">Sales Process</td><td class="text-center p-2"><input type="radio" name="score_sales"></td><td class="text-center p-2"><input type="radio" name="score_sales"></td><td class="text-center p-2"><input type="radio" name="score_sales"></td><td class="text-center p-2"><input type="radio" name="score_sales"></td><td class="text-center p-2"><input type="radio" name="score_sales"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">Lead Generation</td><td class="text-center p-2"><input type="radio" name="score_lead"></td><td class="text-center p-2"><input type="radio" name="score_lead"></td><td class="text-center p-2"><input type="radio" name="score_lead"></td><td class="text-center p-2"><input type="radio" name="score_lead"></td><td class="text-center p-2"><input type="radio" name="score_lead"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">Marketing</td><td class="text-center p-2"><input type="radio" name="score_mktg"></td><td class="text-center p-2"><input type="radio" name="score_mktg"></td><td class="text-center p-2"><input type="radio" name="score_mktg"></td><td class="text-center p-2"><input type="radio" name="score_mktg"></td><td class="text-center p-2"><input type="radio" name="score_mktg"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">RevOps / Data</td><td class="text-center p-2"><input type="radio" name="score_ops"></td><td class="text-center p-2"><input type="radio" name="score_ops"></td><td class="text-center p-2"><input type="radio" name="score_ops"></td><td class="text-center p-2"><input type="radio" name="score_ops"></td><td class="text-center p-2"><input type="radio" name="score_ops"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">Implementation</td><td class="text-center p-2"><input type="radio" name="score_impl"></td><td class="text-center p-2"><input type="radio" name="score_impl"></td><td class="text-center p-2"><input type="radio" name="score_impl"></td><td class="text-center p-2"><input type="radio" name="score_impl"></td><td class="text-center p-2"><input type="radio" name="score_impl"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">CS / Retention</td><td class="text-center p-2"><input type="radio" name="score_cs"></td><td class="text-center p-2"><input type="radio" name="score_cs"></td><td class="text-center p-2"><input type="radio" name="score_cs"></td><td class="text-center p-2"><input type="radio" name="score_cs"></td><td class="text-center p-2"><input type="radio" name="score_cs"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr class="border-b border-slate-200"><td class="p-2 font-medium">Tech Stack</td><td class="text-center p-2"><input type="radio" name="score_tech"></td><td class="text-center p-2"><input type="radio" name="score_tech"></td><td class="text-center p-2"><input type="radio" name="score_tech"></td><td class="text-center p-2"><input type="radio" name="score_tech"></td><td class="text-center p-2"><input type="radio" name="score_tech"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                    <tr><td class="p-2 font-medium">AI Readiness</td><td class="text-center p-2"><input type="radio" name="score_ai"></td><td class="text-center p-2"><input type="radio" name="score_ai"></td><td class="text-center p-2"><input type="radio" name="score_ai"></td><td class="text-center p-2"><input type="radio" name="score_ai"></td><td class="text-center p-2"><input type="radio" name="score_ai"></td><td class="p-2"><input type="text" class="w-full border-b border-slate-300 text-xs p-1 outline-none"></td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- ===== NEXT STEPS ===== -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold mb-4 border-b-2 border-slate-900 pb-2">Next Steps & Recommendations</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-1">Top 3 Gaps Identified:</label>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2"><span class="font-bold text-slate-400">1.</span><input type="text" class="flex-1 p-1.5 border border-slate-300 rounded text-sm" placeholder=""></div>
+                        <div class="flex items-center gap-2"><span class="font-bold text-slate-400">2.</span><input type="text" class="flex-1 p-1.5 border border-slate-300 rounded text-sm" placeholder=""></div>
+                        <div class="flex items-center gap-2"><span class="font-bold text-slate-400">3.</span><input type="text" class="flex-1 p-1.5 border border-slate-300 rounded text-sm" placeholder=""></div>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">Quick Wins (AI / Software can solve in 30 days):</label>
+                    <textarea rows="2" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder=""></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">Recommended Engagement:</label>
+                    <div class="flex gap-4 text-sm">
+                        <label class="flex items-center gap-2"><input type="checkbox" class="accent-blue-600"> Advisory (monthly)</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" class="accent-blue-600"> Fractional (weekly)</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" class="accent-blue-600"> Project-based</label>
+                        <label class="flex items-center gap-2"><input type="checkbox" class="accent-blue-600"> Full audit report</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">Follow-up Notes:</label>
+                    <textarea rows="3" class="w-full p-2 border border-slate-300 rounded text-sm" placeholder=""></textarea>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center text-xs text-slate-300 py-6 border-t border-slate-200">
+            SaaS Guide Solutions | GTM Audit Discovery Document | Internal Use Only
+        </div>
+    </div>
+
+</body>
+</html>
