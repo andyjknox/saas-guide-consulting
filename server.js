@@ -533,6 +533,53 @@ app.post('/submit-whistler', async (req, res) => {
     }
 });
 
+// Download gate - track email and session info for checklist downloads
+app.post('/submit-download', async (req, res) => {
+    const { email, document: docName, referrer, page, screenRes, language, timezone } = req.body;
+
+    const clientIp = req.headers['x-forwarded-for'] || req.ip || req.connection.remoteAddress;
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+
+    if (!email) return res.status(400).json({ error: 'Email required' });
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email' });
+
+    const safeEmail = escapeHtml(email);
+    const safeDoc = escapeHtml(docName);
+    const safeReferrer = escapeHtml(referrer);
+    const safePage = escapeHtml(page);
+
+    try {
+        await resend.emails.send({
+            from: 'Downloads <andyknox@saasguidesolutions.com>',
+            to: 'andyknox@saasguidesolutions.com',
+            subject: `Checklist Download: ${safeEmail}`,
+            html: `
+                <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #2563eb;">New Checklist Download</h2>
+                    <p><strong>Email:</strong> ${safeEmail}</p>
+                    <p><strong>Document:</strong> ${safeDoc}</p>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 12px 0;">
+                    <p style="font-size: 13px; color: #666;"><strong>Session Details:</strong></p>
+                    <p style="font-size: 12px; color: #888;"><strong>IP Address:</strong> ${escapeHtml(clientIp)}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>User Agent:</strong> ${escapeHtml(userAgent)}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>Referrer:</strong> ${safeReferrer || 'Direct'}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>Page:</strong> ${safePage}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>Screen:</strong> ${escapeHtml(screenRes)}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>Language:</strong> ${escapeHtml(language)}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>Timezone:</strong> ${escapeHtml(timezone)}</p>
+                    <p style="font-size: 12px; color: #888;"><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+                </div>
+            `
+        });
+        res.json({ success: true });
+    } catch (error) {
+        console.error("Resend Error (Download):", error);
+        res.json({ success: true }); // Still return success so user can download
+    }
+});
+
 // Duplicate booking prevention (by email + IP)
 const bookingTracker = new Map();
 const BOOKING_COOLDOWN = 7 * 24 * 60 * 60 * 1000; // 7 days
